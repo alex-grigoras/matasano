@@ -1,4 +1,4 @@
-This crappy solution took me way more time than it should.
+This crappy solution took me way more time than it should. What did me in was that the padding adds an extra block if the plaintext is already a multiple of 16 bytes. I guess I should of done what the previous challenge said and manually implement the padding. Then I wouldn've known better.
 The starting problem is pretty silly: you have access to the data you must decrypt.
 I suppose this is useful when you send data to a service to be encrypted and the service tacks on a piece of thing at the end of your data.
 This can be used to get into the piece the service sticks on, I suppose
