@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -38,12 +37,12 @@ namespace sandbox2
     {
         private static string _key = "0123456789123456";
 
-        public static byte[] EncryptAESECB(byte[] inputBytes)
+        public static byte[] Encrypt(byte[] inputBytes)
         {
             var aes = Aes.Create();
             aes.Key = Encoding.ASCII.GetBytes(_key);
             aes.Mode = CipherMode.ECB;
-            aes.Padding = inputBytes.Length%16 ==0 ? PaddingMode.None : PaddingMode.PKCS7;
+            aes.Padding = PaddingMode.PKCS7;
             aes.BlockSize = 128;
 
             var encryptor = aes.CreateEncryptor();
@@ -82,20 +81,20 @@ namespace sandbox2
         {
             var dict = new Dictionary<byte[], byte>(new ByteArrayComparer());
             var decrypted = new List<byte>();
-            for (var i = 1; i <= 16; i++)
+            for (var i = 1; i <= Math.Min(16, inputBytes.Count()); i++)
             {
                 dict.Clear();
                 var blocks = GetBlocks(i-1, inputBytes);
                 foreach (var block in blocks)
                 {
-                    var encryptedBlock = RandomKeyAESECB.EncryptAESECB(block);
+                    var encryptedBlock = RandomKeyAESECB.Encrypt(block);
                     dict[encryptedBlock] = block.Last();
                 }
 
                 foreach (var block in blocks.Select(b => b.Take(b.Length-i)))
                 {
                     var toEncrypt = block.Concat(inputBytes.Take(i)).ToArray();
-                    var encryptedBlock = RandomKeyAESECB.EncryptAESECB(toEncrypt);
+                    var encryptedBlock = RandomKeyAESECB.Encrypt(toEncrypt);
                     if (dict.ContainsKey(encryptedBlock))
                     {
                         decrypted.Add(dict[encryptedBlock]);
