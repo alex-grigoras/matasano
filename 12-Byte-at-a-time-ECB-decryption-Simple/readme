@@ -1,0 +1,4 @@
+This crappy solution took me way more time than it should.
+The starting problem is pretty silly: you have access to the data you must decrypt.
+I suppose this is useful when you send data to a service to be encrypted and the service tacks on a piece of thing at the end of your data.
+This can be used to get into the piece the service sticks on, I suppose
